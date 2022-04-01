@@ -124,6 +124,18 @@ module.exports = {
       template: './public/index.html',
       inject: 'body',
       // minify: true,
+      minify: !isDevelopment && {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
     }),
 
     // ProvidePlugin
