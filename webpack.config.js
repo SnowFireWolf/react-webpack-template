@@ -1,10 +1,47 @@
 const path = require('path');
 const webpack = require('webpack');
+
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
+
+const isCssConfig = () => {
+  let plugins = [];
+
+  isDevelopment ?
+    plugins = [] :
+    plugins = [
+      new MiniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        // both options are optional
+        filename: 'css/[name].[contenthash:8].css',
+        chunkFilename: 'css/[name].[contenthash:8].chunk.css',
+      }),
+      new CssMinimizerPlugin(),
+    ]
+
+  return plugins;
+}
+
+const minimizerConfig = () => {
+  let plugins = [];
+
+  isDevelopment ?
+    plugins = [] :
+    plugins = [
+      new CssMinimizerPlugin({
+        minify: CssMinimizerPlugin.esbuildMinify,
+      }),
+      new ESBuildMinifyPlugin(),
+    ]
+
+  return plugins;
+}
 
 
 
@@ -53,7 +90,10 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        use: [
+          isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+          "css-loader"
+        ],
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/i,
@@ -67,15 +107,18 @@ module.exports = {
   },
 
   optimization: {
-		minimize: false,
-		minimizer: [
-			// Use esbuild to minify
-			new ESBuildMinifyPlugin(),
-		],
-	},
+    splitChunks: {
+      chunks: 'all',
+    },
+    minimizer: [
+      ...minimizerConfig(),
+    ],
+  },
 
   plugins: [
-    isDevelopment && new ReactRefreshWebpackPlugin(),
+    new webpack.ProgressPlugin(),
+
+    new ReactRefreshWebpackPlugin(),
 
     new HtmlWebpackPlugin({
       template: './public/index.html',
@@ -83,10 +126,12 @@ module.exports = {
       // minify: true,
     }),
 
-    // process
+    // ProvidePlugin
     new webpack.ProvidePlugin({
       process: 'process/browser',
-			React: 'react',
+      React: 'react',
     }),
+
+    ...isCssConfig(),
   ]
 };
