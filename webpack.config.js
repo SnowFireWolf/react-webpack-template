@@ -13,6 +13,7 @@ module.exports = {
     },
     compress: true,
     port: 9000,
+    historyApiFallback: true,
   },
 
   entry: './src/main.jsx',
@@ -21,6 +22,7 @@ module.exports = {
     filename: '[name].[fullhash].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
+    publicPath: '/',
   },
 
   resolve: {

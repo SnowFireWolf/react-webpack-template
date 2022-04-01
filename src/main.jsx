@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOMClient from "react-dom/client";
 import "./index.css";
-// import App from "./App";
-import Home from "./pages/Home.jsx";
+import App from "./App.jsx";
+// import Home from "./pages/Home.jsx";
 
-const container = document.getElementById("root");
+
 
 // Create a root.
-const root = ReactDOMClient.createRoot(container);
+const root = ReactDOMClient.createRoot(document.getElementById("root"));
 
-root.render(<Home />);
+// Render the root.
+root.render(<App />);
