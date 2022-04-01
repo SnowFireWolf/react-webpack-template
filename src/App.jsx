@@ -1,34 +1,63 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
-import Home from "@/pages/Home";
-import About from "@/pages/About";
+// theme
+import { ThemeProvider } from "@emotion/react";
+import theme from "@/theme";
 
+// layout
+import BaseLayout from "@/components/layout/Index";
 
+// style
+import "@/styles/reset.css";
+import "@/styles/global.css";
+
+// router element
+import RouteConfig from "@/router";
 
 
 
 export default function App() {
-  return (
-    <Router>
-      <div className="App">
-        <p>
-          <Link to="/" className="App-link">
-            Home
-          </Link>
-          {" | "}
-          <Link to="/about" className="App-link">
-            About
-          </Link>
-        </p>
+  const APP_NAME = "Finance";
 
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-        <Routes>
-          <Route path="/about" element={<About />} />
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </div>
-    </Router>
+  const TitleMap = [
+    {
+      path: "/",
+      title: `首頁 - ${APP_NAME}`,
+    },
+    {
+      path: "/news",
+      title: `News - ${APP_NAME}`,
+    },
+    {
+      path: "/components",
+      title: `Components - ${APP_NAME}`,
+    },
+    {
+      path: "/about",
+      title: `About - ${APP_NAME}`,
+    },
+    {
+      path: "*",
+      title: `Not Found - ${APP_NAME}`,
+    },
+  ];
+
+  const currentLocation = useLocation();
+  useEffect(() => {
+    const curTitle = TitleMap.find(
+      (item) => item.path === currentLocation.pathname
+    );
+    if (curTitle && curTitle.title) {
+      document.title = curTitle.title;
+    }
+  }, [currentLocation]);
+
+  return (
+    <ThemeProvider theme={theme}>
+      <BaseLayout>
+        <RouteConfig />
+      </BaseLayout>
+    </ThemeProvider>
   );
 }
