@@ -2,3 +2,4 @@
 * `react-refresh` + `@pmmmwh/react-refresh-webpack-plugin` (HMR)
 * faster build (esbuild-loader)
 * react + react-router-dom
+* css minify + extract css
