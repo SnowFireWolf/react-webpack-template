@@ -48,14 +48,12 @@ const minimizerConfig = () => {
 module.exports = {
   mode: isDevelopment ? 'development' : 'production',
 
-  devtool: isDevelopment ? 'cheap-module-source-map' : false,
-
   devServer: {
     static: {
       directory: path.join(__dirname, 'public'),
     },
     compress: true,
-    port: 3000,
+    port: 9000,
     historyApiFallback: true,
     hot: true,
   },
