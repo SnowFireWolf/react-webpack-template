@@ -1,11 +1,15 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const { ESBuildMinifyPlugin } = require('esbuild-loader');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 
 
 module.exports = {
-  mode: 'development',
+  mode: isDevelopment ? 'development' : 'production',
 
   devServer: {
     static: {
@@ -14,9 +18,10 @@ module.exports = {
     compress: true,
     port: 9000,
     historyApiFallback: true,
+    hot: true,
   },
 
-  entry: './src/main.jsx',
+  entry: './src/main',
 
   output: {
     filename: '[name].[fullhash].js',
@@ -27,6 +32,9 @@ module.exports = {
 
   resolve: {
     alias: {
+      'react-dom': '@hot-loader/react-dom',
+    },
+    alias: {
       '@': path.resolve(__dirname, 'src'),
       '@/': path.resolve(__dirname, 'src'),
     },
@@ -36,7 +44,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(jsx?|js?)$/,
+        test: /\.(jsx|js)$/,
         loader: 'esbuild-loader',
         options: {
           loader: 'jsx',  // Or 'ts' if you don't need tsx
@@ -58,15 +66,27 @@ module.exports = {
     ]
   },
 
+  optimization: {
+		minimize: false,
+		minimizer: [
+			// Use esbuild to minify
+			new ESBuildMinifyPlugin(),
+		],
+	},
+
   plugins: [
+    isDevelopment && new ReactRefreshWebpackPlugin(),
+
     new HtmlWebpackPlugin({
       template: './public/index.html',
       inject: 'body',
       // minify: true,
     }),
+
     // process
     new webpack.ProvidePlugin({
       process: 'process/browser',
+			React: 'react',
     }),
   ]
 };
