@@ -30,28 +30,17 @@ module.exports = {
       '@': path.resolve(__dirname, 'src'),
       '@/': path.resolve(__dirname, 'src'),
     },
-
-    // modules: [
-    //   path.join(__dirname, 'node_modules')
-    // ]
+    extensions: ['', '.js', '.jsx']
   },
 
   module: {
     rules: [
-      // {
-      //   test: /\.js?$/,
-      //   loader: 'esbuild-loader',
-      //   options: {
-      //     loader: 'js',  // Or 'ts' if you don't need tsx
-      //     target: 'es2017'
-      //   }
-      // },
       {
-        test: /\.jsx?$/,
+        test: /\.(jsx?|js?)$/,
         loader: 'esbuild-loader',
         options: {
           loader: 'jsx',  // Or 'ts' if you don't need tsx
-          target: 'es2017'
+          target: 'es2019'
         }
       },
       {

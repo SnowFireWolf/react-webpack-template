@@ -1,1 +1,1 @@
-# webpack-template => snabbdom + webpack + esbuild
+# react-webpack-template => react + react-router-dom + webpack + esbuild
